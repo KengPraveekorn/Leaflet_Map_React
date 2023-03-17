@@ -1,70 +1,37 @@
-# Getting Started with Create React App
+# React Leaflet 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Core concepts
+React Leaflet provides bindings between React and Leaflet. It does not replace Leaflet, but leverages it to abstract Leaflet layers as React components. As such, it can behave differently from how other React components work, notably:
 
-## Available Scripts
+# DOM rendering
+React does not render Leaflet layers to the DOM, this rendering is done by Leaflet itself. React only renders a <div> element when rendering the MapContainer component and the contents of UI layers components.
 
-In the project directory, you can run:
+# Component properties
+The properties passed to the components are used to create the relevant Leaflet instance when the component is rendered the first time and should be treated as immutable by default.
 
-### `npm start`
+During the first render, all these properties should be supported as they are by Leaflet, however they will not be updated in the UI when they change unless they are explicitly documented as being mutable.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Mutable properties changes are compared by reference (unless stated otherwise) and are applied calling the relevant method on the Leaflet element instance.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Leaflet elements references
+Unless stated otherwise, all components exported by React Leaflet support refs exposing the created Leaflet element instance or DOM element (for panes).
 
-### `npm test`
+This allows applications to access Leaflet's imperative APIs when required, but may create inconsistencies with props being set and should be used carefully.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# React context
+React Leaflet uses React's context API to make some Leaflet elements instances available to children elements that need it.
 
-### `npm run build`
+Each Leaflet map instance has its own React context, created by the MapContainer component. Other components and hooks provided by React Leaflet can only be used as descendants of a MapContainer.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# Lifecycle process
+The MapContainer renders a container <div> element for the map. If the placeholder prop is set, it will be rendered inside the container <div>.
+The MapContainer instantiates a Leaflet Map for the created <div> with the component properties and creates the React context containing the map instance.
+The MapContainer renders its children components.
+Each child component instantiates the matching Leaflet instance for the element using the component properties and context, and adds it to the map.
+When a child component is rendered again, changes to its supported mutable props are applied to the map.
+When a component is removed from the render tree, it removes its layer from the map as needed.
+# Limitations
+Leaflet makes direct calls to the DOM when it is loaded, therefore React Leaflet is not compatible with server-side rendering.
+The components exposed are abstractions for Leaflet layers, not DOM elements. Some of them have properties that can be updated directly by calling the setters exposed by Leaflet while others should be completely replaced, by setting an unique value on their key property so they are properly handled by React's algorithm.
+  
+https://react-leaflet.js.org/docs/start-introduction/
