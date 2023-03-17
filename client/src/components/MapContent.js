@@ -1,6 +1,7 @@
 // rafce --> react allow func
 import React from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import BaseMap from "./layer/BaseMap";
 
 const MapContent = () => {
   // javascript
@@ -13,11 +14,10 @@ const MapContent = () => {
         center={[13, 100]} // latitude longtitude thai
         zoom={6} 
         >
-        {/* TileLayer คือแสดงแผนที่  */}
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+       
+       {/* เรียกใช้ Component */}
+        <BaseMap/>
+
       </MapContainer>
     </div>
   );
