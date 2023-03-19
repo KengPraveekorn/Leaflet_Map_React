@@ -2,6 +2,7 @@
 import React from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import BaseMap from "./layer/BaseMap";
+import CSVFileLocal from "./layer/CSVFileLocal";
 
 const MapContent = () => {
   // javascript
@@ -17,6 +18,7 @@ const MapContent = () => {
        
        {/* เรียกใช้ Component */}
         <BaseMap/>
+        <CSVFileLocal/>
 
       </MapContainer>
     </div>
